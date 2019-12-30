@@ -1,0 +1,11 @@
+[Unit]
+Description="prometheus"
+After= network.target
+
+[Service]
+ExecStart=/usr/bin/prometheus --config.file /etc/prometheus/prometheus.yml --storage.tsdb.path=/var/lib/prometheus/data
+ExecStop=/bin/kill -TERM $MAINPID
+ExecReload=/bin/kill -HUP $MAINPID
+
+[Install]
+WantedBy=multi-user.target

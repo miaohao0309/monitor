@@ -1,0 +1,6 @@
+---
+- hosts: "{{ target | default('prometheus')}}"
+  gather_facts: yes
+  become: yes
+  roles:
+    - prometheus

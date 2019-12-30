@@ -1,0 +1,31 @@
+---
+
+- name: Copy consul bin file
+  copy:
+    src: "{{ dists }}/consul"
+    dest: /usr/bin/consul
+    mode: 0755
+
+- name: Create consul data dir
+  file: 
+    path: /var/lib/consul
+    state: directory
+    mode: 0644
+
+- name: Copy templated consul.service
+  template:
+    src: consul.service.j2
+    dest: /etc/systemd/system/consul.service    
+    mode: 0644
+
+- name: reload daemon
+  systemd:
+    name: consul
+    state: reloaded
+
+- name: Start and enable consul service 
+  service:
+    name: consul.service
+    state: restarted
+    enabled: true
+

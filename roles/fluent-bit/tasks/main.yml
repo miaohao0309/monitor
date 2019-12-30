@@ -1,0 +1,61 @@
+---
+
+- name: Install rsyslog service on RedHat
+  yum: 
+    name: rsyslog
+    state: latest 
+  when: ansible_os_family == "RedHat"
+
+- name: Install rsyslog service on Ubuntu
+  apt:
+    name: rsyslog
+    state: latest
+  when: ansible_os_family == "Debian"
+
+- name: Add rsyslog config
+  copy: 
+    src: 50-fluent-bit.conf
+    dest: /etc/rsyslog.d/50-fluent-bit.conf
+    mode: 0644
+
+- name: Start rsyslog service
+  service:
+    name: rsyslog.service
+    state: restarted
+    enabled: true    
+
+- name: Create fluent-bit dir
+  file:
+    path: "{{ fluent_bit_dir }}"
+    state: directory
+
+- name: Copy fluent-bit bin file
+  copy:
+    src: "{{ dists }}/fluent-bit"
+    dest: "{{ fluent_bit_dir }}/fluent-bit"
+    mode: 0755
+
+- name: Setup parsers.conf 
+  copy: 
+    src: parsers.conf
+    dest: "{{ fluent_bit_dir }}/parsers.conf"
+    mode: 0644
+
+- name: Setup fluent-bit config files
+  template:
+    src: fluent-bit.conf.j2
+    dest: "{{ fluent_bit_dir }}/fluent-bit.conf"
+    mode: 0644
+
+- name: Setup fluent-bit service files
+  template:
+    src: fluent-bit.service.j2
+    dest: /etc/systemd/system/fluent-bit.service
+    mode: 0644
+
+- name: Start and enable fluent-bit service 
+  service:
+    name: fluent-bit.service
+    state: restarted
+    enabled: true
+

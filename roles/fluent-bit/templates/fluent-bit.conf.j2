@@ -1,0 +1,44 @@
+[SERVICE]
+    Flush        5
+    Daemon       Off
+    Log_Level    info
+    Parsers_File parsers.conf
+
+[INPUT]
+    Name        syslog
+    Parser      syslog-rfc3164
+    Listen      127.0.0.1
+    Port        5140
+    Mode        tcp
+    Tag         syslog
+
+[INPUT]
+    Name            systemd
+    Tag             nodeagent
+    Systemd_Filter  _SYSTEMD_UNIT=nodeagent.service
+
+[FILTER]
+    Name parser
+    Match nodeagent
+    Key_Name MESSAGE
+    Parser json
+
+[FILTER]
+    Name record_modifier
+    Match nodeagent
+    Record hostname ${HOSTNAME}
+
+[OUTPUT]
+    Name        forward
+    Match       nodeagent
+    Host        {{ hostvars[groups['fluentd'][0]].ansible_host }}
+    Port        24224
+    Retry_limit False
+
+[OUTPUT]
+    Name        forward
+    Match       syslog
+    Host        {{ hostvars[groups['fluentd'][0]].ansible_host }}
+    Port        24224
+    Retry_limit False
+

@@ -1,0 +1,64 @@
+---
+
+- name: Copy elasticsearch rpm file 
+  copy:
+    src: "{{ dists }}/elasticsearch-7.5.1-x86_64.rpm"
+    dest: /tmp/elasticsearch-7.5.1-x86_64.rpm
+    mode: 0755
+
+- name: Install elasticsearch and openjdk
+  yum:
+    name: "{{ item }}"
+  with_items:
+    - '/tmp/elasticsearch-7.5.1-x86_64.rpm'
+    - 'java-1.8.0-openjdk-headless'
+
+- name: remove elasticsearch rpm file
+  file:
+    path: "/tmp/elasticsearch-7.5.1-x86_64.rpm"
+    state: absent    
+
+- name: Copy templated elasticsearch.yml
+  template:
+    src: elasticsearch.yml.j2
+    dest: /etc/elasticsearch/elasticsearch.yml
+    owner: root
+    group: elasticsearch
+    mode: 0660
+
+- name: Set jvm.options heap_size_xms
+  lineinfile:
+    dest: /etc/elasticsearch/jvm.options
+    regexp: "-Xms"
+    line: "{{ jvm_Xms }}"    
+
+- name: Set jvm.options heap_size_Xmx 
+  lineinfile:
+    dest: /etc/elasticsearch/jvm.options
+    regexp: "-Xmx"
+    line: "{{ jvm_Xmx }}"
+
+- name: Create log directory structure for ES
+  file:
+    path: /var/log/elasticsearch
+    state: directory
+    owner: elasticsearch
+    group: elasticsearch
+    mode: 0755
+
+- name: Create datadir for elasticsearch
+  file:
+    path: /var/lib/elasticsearch/data
+    state: directory
+    owner: elasticsearch
+    group: elasticsearch
+    mode: 0755
+
+- name: Start or restart elasticsearch service
+  command: systemctl restart elasticsearch.service
+  ignore_errors: true
+  become: true
+
+- name: Setup elasticsearch service to autostart
+  service: name=elasticsearch state=started enabled=true
+  become: true

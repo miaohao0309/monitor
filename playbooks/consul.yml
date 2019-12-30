@@ -1,0 +1,6 @@
+---
+- hosts: "{{ target | default('consul')}}"
+  gather_facts: yes
+  become: yes
+  roles:
+    - consul

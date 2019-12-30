@@ -1,0 +1,45 @@
+---
+
+- name: Copy alertmanager bin file
+  copy:
+    src: "{{ dists }}/alertmanager"
+    dest: /usr/bin/alertmanager
+    mode: 0755
+
+- name: Create alertmanager config dir
+  file:
+    path: /etc/alertmanager/conf
+    state: directory
+
+- name: Create alertmanager storage dir
+  file: 
+    path: /var/lib/alertmanager/storage
+    state: directory
+
+- name: Copy templated alertmanager.yml
+  template:
+    src: alertmanager.yml.j2
+    dest: /etc/alertmanager/conf/alertmanager.yml
+
+- name: Copy templated alertmanager.service
+  template:
+    src: alertmanager.service.j2
+    dest: /etc/systemd/system/alertmanager.service    
+
+- name: Create alertmanager template dir
+  file:
+    path: /etc/alertmanager/template
+    state: directory
+
+- name: Copy wechat.tmpl
+  copy:
+    src: wechat.tmpl
+    dest: /etc/alertmanager/template/wechat.tmpl
+    mode: 0644
+
+- name: Start and enable alertmanager service 
+  service:
+    name: alertmanager.service
+    state: restarted
+    enabled: true
+

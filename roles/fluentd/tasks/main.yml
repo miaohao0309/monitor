@@ -1,0 +1,42 @@
+---
+
+- name: Copy fluentd rpm file 
+  copy:
+    src: "{{ dists }}/td-agent-3.5.1-0.el8.x86_64.rpm"
+    dest: /tmp/td-agent-3.5.1-0.el8.x86_64.rpm
+    mode: 0755
+
+- name: Install fluentd
+  yum:
+    name: "/tmp/td-agent-3.5.1-0.el8.x86_64.rpm"
+
+- name: remove fluentd rpm file
+  file:
+    path: "/tmp/td-agent-3.5.1-0.el8.x86_64.rpm"
+    state: absent    
+
+- name: Copy templated fluentd conf
+  template:
+    src: td-agent.conf.j2
+    dest: /etc/td-agent/td-agent.conf
+    mode: 0644
+
+- name: Create buffer directory for fluentd
+  file:
+    path: "/var/log/td-agent/buffer-{{ item }}"
+    state: directory
+    owner: td-agent
+    group: td-agent
+    mode: 0755
+  with_items:
+    - 'nodeagent'
+    - 'syslog'  
+
+- name: Start or restart fluentd service
+  command: systemctl restart td-agent.service
+  ignore_errors: true
+  become: true
+
+- name: Setup fluentd service to autostart
+  service: name=td-agent state=started enabled=true
+  become: true

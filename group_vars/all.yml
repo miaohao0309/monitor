@@ -1,0 +1,18 @@
+---
+# all
+dists: /opt/devops/monitor/dists
+
+# elasticsearch
+cluster_name: eaas
+jvm_Xmx: -Xmx4g
+jvm_Xms: -Xms4g
+
+#fluent-bit
+fluent_bit_dir: /data/fluent-bit
+
+#alertmanaer
+corp_id: wwf5a3cce9198caae5
+to_party: 2
+agent_id: 1000006
+api_secret: QypjRFHOBDpNYVHXripNjokGcFi4PNjSsTReEPQPFLc
+

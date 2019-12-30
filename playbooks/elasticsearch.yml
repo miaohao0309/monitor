@@ -1,0 +1,6 @@
+---
+- hosts: "{{ target | default('elasticsearch')}}"
+  gather_facts: yes
+  become: yes
+  roles:
+    - elasticsearch

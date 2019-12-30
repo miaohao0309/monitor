@@ -1,0 +1,6 @@
+---
+- hosts: "{{ target | default('alertmanager')}}"
+  gather_facts: yes
+  become: yes
+  roles:
+    - alertmanager

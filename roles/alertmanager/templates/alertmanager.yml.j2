@@ -1,0 +1,21 @@
+global:
+  resolve_timeout: 2m
+
+templates:
+  - '/etc/alertmanager/template/wechat.tmpl'
+
+route:
+  group_by: ['alertname']
+  group_wait: 10s
+  group_interval: 2s
+  repeat_interval: 10m
+  receiver: 'wechat'
+
+receivers:
+- name: 'wechat'
+  wechat_configs:
+  - corp_id: {{ corp_id }}
+    to_party: {{ to_party }}
+    agent_id: {{ agent_id }}
+    api_secret: {{ api_secret }}
+

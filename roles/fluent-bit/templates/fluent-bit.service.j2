@@ -1,0 +1,23 @@
+[Unit]
+Description=nomad Agent
+After=network.target consul.service
+
+[Service]
+User=root
+Group=root
+LimitSTACK=infinity
+LimitMEMLOCK=infinity
+LimitAS=infinity
+LimitRSS=infinity
+LimitCORE=infinity
+LimitNOFILE=65535
+
+Restart=on-failure
+RestartSec=20
+TimeoutStartSec=0
+
+ExecStart={{ fluent_bit_dir }}/fluent-bit -c {{ fluent_bit_dir }}/fluent-bit.conf
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,6 @@
+---
+- hosts: "{{ target | default('node_exporter')}}"
+  gather_facts: yes
+  become: yes
+  roles:
+    - node_exporter

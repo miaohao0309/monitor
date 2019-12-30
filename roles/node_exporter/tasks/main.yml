@@ -1,0 +1,31 @@
+---
+
+- name: Copy node_exporter bin file
+  copy:
+    src: "{{ dists }}/node_exporter"
+    dest: /usr/bin/node_exporter
+    mode: 0755
+
+- name: Copy templated node_exporter.service
+  template:
+    src: node_exporter.service.j2
+    dest: /etc/systemd/system/node_exporter.service    
+    mode: 0644
+
+- name: Start and enable node_exporter service 
+  service:
+    name: node_exporter.service
+    state: restarted
+    enabled: true
+
+- name: Copy register.sh 
+  template:
+    src: register.sh.j2
+    dest: /tmp/register.sh
+    mode: 0755
+
+- name: register node_expoter service to consul
+  shell: /tmp/register.sh
+  args:
+    executable: /bin/bash
+  run_once: true

@@ -1,0 +1,6 @@
+---
+- hosts: "{{ target | default('fluent-bit')}}"
+  gather_facts: yes
+  become: yes
+  roles:
+    - fluent-bit

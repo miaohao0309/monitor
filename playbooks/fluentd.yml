@@ -1,0 +1,6 @@
+---
+- hosts: "{{ target | default('fluentd')}}"
+  gather_facts: yes
+  become: yes
+  roles:
+    - fluentd

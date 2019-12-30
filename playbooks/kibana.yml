@@ -1,0 +1,6 @@
+---
+- hosts: "{{ target | default('kibana')}}"
+  gather_facts: yes
+  become: yes
+  roles:
+    - kibana

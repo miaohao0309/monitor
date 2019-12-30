@@ -1,0 +1,40 @@
+---
+
+- name: Copy prometheus bin file
+  copy:
+    src: "{{ dists }}/prometheus"
+    dest: /usr/bin/prometheus
+    mode: 0755
+
+- name: Create prometheus config dir
+  file:
+    path: /etc/prometheus
+    state: directory
+
+- name: Create prometheus data dir
+  file: 
+    path: /var/lib/prometheus/data
+    state: directory
+
+- name: Copy templated prometheus.yml
+  template:
+    src: prometheus.yml.j2
+    dest: /etc/prometheus/prometheus.yml
+
+- name: Copy rules 
+  copy:
+    src: rules_node_exporter.yml
+    dest: /etc/prometheus/rules_node_exporter.yml
+    mode: 0644
+
+- name: Copy templated prometheus.service
+  template:
+    src: prometheus.service.j2
+    dest: /etc/systemd/system/prometheus.service    
+
+- name: Start and enable prometheus service 
+  service:
+    name: prometheus.service
+    state: restarted
+    enabled: true
+

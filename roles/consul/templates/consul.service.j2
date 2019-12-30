@@ -1,0 +1,15 @@
+[Unit]
+Description=Consul Agent
+After=network.target
+
+[Service]
+Restart=on-failure
+RestartSec=20
+
+ExecStart=/usr/bin/consul agent -server -data-dir=/var/lib/consul  -node={{ hostvars[groups['consul'][0]].hostname }} -bind={{ hostvars[groups['consul'][0]].ip }} -bootstrap-expect=1  -ui -client={{ hostvars[groups['consul'][0]].ip }}
+ExecReload=/usr/bin/consul reload 
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target
+

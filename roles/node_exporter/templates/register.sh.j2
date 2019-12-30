@@ -1,0 +1,7 @@
+#!/bin/bash
+
+id={{ ansible_host }}:9100
+
+curl --request PUT http://172.16.5.101:8500/v1/agent/service/deregister/$id
+
+curl -X PUT -d '{"id": "'"$id"'","name": "node_exporter","address": "{{ ansible_host }}","port": 9100,"tags": ["{{ ansible_hostname }}"],"checks": [{"http": "http://{{ ansible_host }}:9100/","interval": "5s"}]}'  http://{{ hostvars[groups['consul'][0]].ansible_host }}:8500/v1/agent/service/register

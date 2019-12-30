@@ -1,0 +1,29 @@
+# ======================== Elasticsearch Configuration =========================
+#
+# ---------------------------------- Cluster -----------------------------------
+#
+cluster.name: {{ cluster_name }}
+#
+# ------------------------------------ Node ------------------------------------
+#
+node.name: {{ hostvars[groups['elasticsearch'][0]].hostname }}
+#
+# ----------------------------------- Paths ------------------------------------
+#
+path.data: /var/lib/elasticsearch/data
+path.logs: /var/log/elasticsearch
+#
+# ----------------------------------- Memory -----------------------------------
+#
+bootstrap.memory_lock: false
+#
+# ---------------------------------- Network -----------------------------------
+#
+network.host: {{ hostvars[groups['elasticsearch'][0]].ansible_host }}
+http.port: 9200
+#
+# ---------------------------------- Discorvery -----------------------------------
+#
+bootstrap.system_call_filter: false
+cluster.initial_master_nodes: ["{{ hostvars[groups['elasticsearch'][0]].hostname }}"]
+#

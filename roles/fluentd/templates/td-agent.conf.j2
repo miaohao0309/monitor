@@ -1,0 +1,34 @@
+<source>
+  type forward
+  bind {{ hostvars[groups['fluentd'][0]].ansible_host }}
+  port 24224
+</source>
+
+<match nodeagent>
+  @type elasticsearch
+  host {{ hostvars[groups['elasticsearch'][0]].ansible_host }}
+  port 9200
+  index_name nodeagent
+  <buffer> 
+    @type file
+    path /var/log/td-agent/buffer-nodeagent
+    flush_interval 1
+    flush_thread_count 8
+    chunk_limit_size 1024MB
+  </buffer>
+</match>
+
+<match syslog>
+  @type elasticsearch
+  host {{ hostvars[groups['elasticsearch'][0]].ansible_host }}
+  port 9200
+  index_name syslog
+  <buffer>
+    @type file
+    path /var/log/td-agent/buffer-syslog
+    flush_interval 1
+    flush_thread_count 8
+    chunk_limit_size 1024MB
+  </buffer>
+</match>
+

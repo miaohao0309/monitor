@@ -1,0 +1,12 @@
+Description=AlertManager server daemon
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/alertmanager --config.file=/etc/alertmanager/conf/alertmanager.yml --storage.path=/var/lib/alertmanager/storage
+Restart=on-failur
+ExecStop=/bin/kill -9 $MAINPID
+
+[Install]
+WantedBy=multi-user.target
+

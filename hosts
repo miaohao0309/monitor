@@ -1,0 +1,24 @@
+[elasticsearch]
+monitor ansible_host=172.16.5.101 ansible_hostname=monitor
+
+[kibana]
+monitor ansible_host=172.16.5.101 ansible_hostname=monitor
+
+[fluentd]
+monitor ansible_host=172.16.5.101 ansible_hostname=monitor
+
+[fluent-bit]
+worker  ansible_host=172.16.5.201 ansible_hostname=worker 
+monitor ansible_host=172.16.5.101 ansible_hostname=monitor 
+
+[prometheus]
+monitor ansible_host=172.16.5.101 ansible_hostname=monitor
+
+[consul]
+monitor ansible_host=172.16.5.101 ansible_hostname=monitor
+
+[node_exporter]
+worker  ansible_host=172.16.5.201 ansible_hostname=worker
+
+[alertmanager]
+monitor ansible_host=172.16.5.101 ansible_hostname=monitor

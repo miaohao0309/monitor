@@ -1,0 +1,58 @@
+groups:
+
+- name: node_health
+  rules:
+  - alert: "监控程序存活告警"
+    expr: up < 1
+    for: 120s
+    labels:
+      severity: warning
+    annotations:
+      summary: "监控程序存活告警"
+      description: "当前监控程序状态异常,请及时查看"
+
+- name: swap_used
+  rules:
+  - alert: "交换分区使用告警"
+    expr: (1-node_memory_SwapFree/node_memory_SwapTotal) * 100 > 90
+    for: 15s
+    labels:
+      severity: warning
+    annotations:
+      summary: "交换分区使用率超过90%"
+      description: "当前交换分区使用率为: {{ $value }},请及时查看"
+
+- name: filesystem_used_/
+  rules:
+  - alert: "文件系统使用告警_/"
+    expr: (1 -  (node_filesystem_free{ fstype != "rootfs",mountpoint = "/"}/node_filesystem_size{fstype != "rootfs",mountpoint = "/"})) * 100 > 85
+    for: 15s
+    labels:
+      severity: warning
+    annotations:
+      summary: "根目录使用率超过85%"
+      description: "当前根目录使用率为: {{ $value }},请及时查看"
+
+- name: filesystem_used_/data
+  rules:
+  - alert: "文件系统使用告警_/data"
+    expr: (1 -  (node_filesystem_free{ fstype != "rootfs",mountpoint = "/data"}/node_filesystem_size{fstype != "rootfs",mountpoint = "/data"})) * 100 > 90
+    for: 15s
+    labels:
+      severity: warning
+    annotations:
+      summary: "data目录使用率超过90%"
+      description: "当前data目录使用率为: {{ $value }},请及时查看"
+
+- name: filesystem_used_/boot
+  rules:
+  - alert: "文件系统使用告警_/boot"
+    expr: (1-(node_filesystem_free{ fstype != "rootfs",mountpoint = "/boot"}/node_filesystem_size{fstype != "rootfs",mountpoint = "/boot"})) * 100 > 90
+    for: 15s
+    labels:
+      severity: warning
+    annotations:
+      summary: "/boot目录使用率超过90%"
+      description: "当前/boot目录使用率为: {{ $value }},请及时查看"
+
+

@@ -1,0 +1,37 @@
+global:
+  scrape_interval:     15s 
+  evaluation_interval: 15s
+
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets:
+      - localhost:9093
+
+rule_files:
+  - "rules_node_exporter.yml"
+
+scrape_configs:
+  - job_name: node_exporter
+    metrics_path: /metrics
+    scheme: http
+    consul_sd_configs:
+      - server: {{ hostvars[groups['consul'][0]].ansible_host }}:8500
+        scheme: http
+        services: 
+          - node_exporter
+    relabel_configs: 
+    - source_labels: ["__meta_consul_service_address"]
+      target_label: instance
+
+  - job_name: procheck
+    metrics_path: /metrics
+    scheme: http
+    consul_sd_configs:
+      - server: {{ hostvars[groups['consul'][0]].ansible_host }}:8500
+        scheme: http
+        services:
+          - procheck
+    relabel_configs:
+    - source_labels: ["__meta_consul_service_address"]
+      target_label: instance

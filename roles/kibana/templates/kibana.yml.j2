@@ -1,0 +1,7 @@
+server.port: 5601
+
+server.host: {{ hostvars[groups['kibana'][0]].ansible_host }}
+
+elasticsearch.hosts: ["http://{{ hostvars[groups['elasticsearch'][0]].ansible_host }}:9200"]
+
+server.name: {{ hostvars[groups['kibana'][0]].ansible_hostname }}
