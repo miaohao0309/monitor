@@ -1,4 +1,4 @@
-This project is used to deploy the eaas_v2 monitoring system by CentOS-8.  
+This project is used to deploy monitoring system by CentOS-8.  
 
 
 include:
