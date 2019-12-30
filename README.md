@@ -1,5 +1,5 @@
 This project is used to deploy monitoring system by CentOS-8.  
-
+The ansible version is 2.8
 
 include:
 
