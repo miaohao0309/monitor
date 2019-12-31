@@ -1,0 +1,34 @@
+---
+
+- name: Stop and enable grafana service
+  service:
+    name: grafana-server
+    state: stopped
+
+- name: Copy grafana rpm file
+  copy:
+    src: "{{ dists }}/grafana-6.5.2-1.x86_64.rpm"
+    dest: /tmp/grafana-6.5.2-1.x86_64.rpm
+    mode: 0755
+
+- name: Install grafana rpms
+  yum:
+    name: "/tmp/grafana-6.5.2-1.x86_64.rpm"
+
+- name: Remove grafana rpm file
+  file: 
+    path: /tmp/grafana-6.5.2-1.x86_64.rpm
+    state: absent
+
+- name: Set grafana config
+  lineinfile:
+    dest: /etc/grafana/grafana.ini
+    regexp: "http_addr"
+    line: "http_addr = {{ hostvars[groups['grafana'][0]].ansible_host }}"
+
+- name: Start and enable grafana service
+  service:
+    name: grafana-server
+    state: restarted
+    enabled: true
+
