@@ -1,0 +1,6 @@
+---
+- hosts: "{{ target | default('grafana')}}"
+  gather_facts: yes
+  become: yes
+  roles:
+    - grafana
